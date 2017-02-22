@@ -1,5 +1,4 @@
 
-
 lazy val akkaVersion = "2.4.11"
 lazy val akkaDependencies = Seq(
   "com.typesafe.akka" %% "akka-testkit" % akkaVersion % Test,
@@ -7,8 +6,9 @@ lazy val akkaDependencies = Seq(
   "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % Test
 )
 lazy val serverDependencies = Seq(
-  "com.vmunier" %% "scalajs-scripts" % "1.0.0",
-  "com.lihaoyi" %% "upickle" % "0.4.3"
+  "com.lihaoyi" %% "upickle" % "0.4.3",
+  "org.scalatest" %% "scalatest" % "3.0.1" % "test",
+  "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % "test"
 )
 lazy val `server` = (project in file("server")).settings(
   scalaVersion := "2.11.8",
@@ -29,14 +29,18 @@ lazy val `client` = (project in file ("client")).settings(
   persistLauncher := true,
   libraryDependencies ++= Seq(
     "org.scala-js" %%% "scalajs-dom" % "0.9.1",
-    "com.lihaoyi" %%% "upickle" % "0.4.3"
+    "com.lihaoyi" %%% "upickle" % "0.4.3",
+    "org.scalatest" %%% "scalatest" % "3.0.1" % "test"
   )
 ).enablePlugins(ScalaJSPlugin, ScalaJSWeb).
   dependsOn(sharedJs)
 
 
 lazy val shared = (crossProject.crossType(CrossType.Pure) in file("shared")).
-  settings(scalaVersion := "2.11.8").
+  settings(
+    scalaVersion := "2.11.8",
+    libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.1" % "test"
+  ).
   jsConfigure(_ enablePlugins ScalaJSWeb)
 
 lazy val sharedJvm = shared.jvm

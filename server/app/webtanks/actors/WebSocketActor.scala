@@ -1,8 +1,9 @@
 package webtanks.actors
 
 import akka.actor._
-import play.api.libs.json.JsValue
 import play.api.Logger
+import shared.{InEvent, RoomState}
+import upickle.default._
 /**
   * Created by Szymon Barańczyk on 2017-02-13.
   */
@@ -12,8 +13,9 @@ object WebSocketActor {
 
 class WebSocketActor(out: ActorRef) extends Actor {
   def receive = {
-    case msg: JsValue =>
-      Logger.debug("msg reveived")
-      out ! msg
+    case msg: String =>
+      val input = read[InEvent](msg)
+      Logger.debug("msg received" + input)
+      out ! write(RoomState(Seq(), Seq()))
   }
 }

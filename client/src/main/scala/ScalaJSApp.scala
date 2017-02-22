@@ -1,14 +1,16 @@
-import scala.scalajs.js
 import shared._
-import upickle._
 import upickle.default._
+
+import scala.scalajs.js
 /**
-  * Created by SBARANCZ on 2017-02-13.
+  * Created by Szymon Barańczyk on 2017-02-13.
   */
 object ScalaJSApp extends js.JSApp {
   override def main(): Unit = {
-    val json = write(GameState(Seq()))
-    println(read[OutEvent](json))
+    val json = write(PlayerInput(1, 1, 1, true))
+    println(read[InEvent](json))
   }
 
+  def openConnection(): Unit = {
+  }
 }
