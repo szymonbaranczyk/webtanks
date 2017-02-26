@@ -12,9 +12,9 @@ trait MovingObject {
   def move(): MovingObject
 }
 
-case class Player(position: Position, velocity: Double, turretDirection: Double, id: String) extends MovingObject {
-  override def move(): Player =
-    Player(
+case class PlayerState(position: Position, velocity: Double, turretDirection: Double, id: String) extends MovingObject with OutEvent {
+  override def move(): PlayerState =
+    PlayerState(
       Position(
         position.x + Helpers.xComp(velocity, position.direction),
         position.y + Helpers.yComp(velocity, position.direction),
@@ -25,8 +25,8 @@ case class Player(position: Position, velocity: Double, turretDirection: Double,
       id
     )
 
-  def changeSpeed(deltaVelocity: Double, deltaTurn: Double): Player =
-    Player(
+  def changeSpeed(deltaVelocity: Double, deltaTurn: Double): PlayerState =
+    PlayerState(
       Position(position.x, position.y, position.direction + deltaTurn),
       velocity + deltaVelocity,
       turretDirection,
@@ -34,8 +34,8 @@ case class Player(position: Position, velocity: Double, turretDirection: Double,
     )
 }
 
-case class Bullet(position: Position, velocity: Double) extends MovingObject {
-  override def move(): Bullet = Bullet(
+case class BulletState(position: Position, velocity: Double) extends MovingObject with OutEvent {
+  override def move(): BulletState = BulletState(
     Position(
       position.x + Helpers.xComp(velocity, position.direction),
       position.y + Helpers.yComp(velocity, position.direction),
@@ -49,9 +49,9 @@ sealed trait InEvent
 
 sealed trait OutEvent
 
-case class PlayerInput(move: Int, rotation: Int, turretRotation: Int, shot: Boolean) extends InEvent
+case class PlayerInput(move: Int, rotation: Int, turretRotation: Int) extends InEvent
 
-case class RoomState(players: Seq[Player], bullets: Seq[Bullet]) extends OutEvent
+case class Shot()
 
 private object Helpers {
   def xComp(v: Double, angle: Double): Double = v * cos(toRadians(angle))

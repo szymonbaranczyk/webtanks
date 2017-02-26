@@ -4,7 +4,7 @@ import org.scalajs.dom._
 import org.scalajs.dom.raw.WebSocket
 import org.scalajs.dom.window.{clearInterval, setInterval}
 import org.scalajs.jquery.{jQuery => $}
-import shared.{OutEvent, PlayerInput, RoomState}
+import shared._
 import upickle.default._
 
 import scala.scalajs.js.annotation.JSExport
@@ -22,12 +22,13 @@ class WebSocketService(d: Debugger) {
     }
     socket.onmessage = (m: MessageEvent) => {
       read[OutEvent](m.data.toString) match {
-        case r: RoomState => d.debug(r.toString)
+        case p: PlayerState => d.debug(p.toString)
+        case b: BulletState => d.debug(b.toString)
       }
     }
     val interval = setInterval(() => {
       d.debug("message sent")
-      socket.send(write(PlayerInput(1, 0, 1, false)))
+      socket.send(write(PlayerInput(1, 0, 1)))
     }, 1000)
     socket.onclose = (_: Event) => {
       d.debug("WebSocket closed")
